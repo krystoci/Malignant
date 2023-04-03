@@ -72,3 +72,16 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+Content/Levels/L_Courtyard/Assets/Gate_Large_Spiked/Large_Spiked_Gate.uasset
+Content/Levels/L_Courtyard/Assets/Blockout/lambert1.uasset
+Content/Levels/L_Courtyard/Assets/Foliage/Grass_Sample.uasset
+Content/Levels/L_Courtyard/Assets/Foliage/Materials/T_DryGrass_A.uasset
+Content/Levels/L_Courtyard/Assets/Foliage/Materials/T_DryGrass_AO.uasset
+Content/Levels/L_Courtyard/Assets/Foliage/Materials/T_DryGrass_Normal.uasset
+Content/Levels/L_Courtyard/Assets/Foliage/Materials/T_DryGrass_Opacity.uasset
+Content/Levels/L_Courtyard/Assets/Foliage/Materials/T_DryGrass_Roughness.uasset
+Content/Levels/L_Courtyard/Assets/Gate_Large/Gate.uasset
+Content/Levels/L_Courtyard/Assets/Gate_Large/Pole.uasset
+Content/Levels/L_Courtyard/Assets/Gate_Large/Rings.uasset
+Content/Levels/L_Courtyard/Assets/Gate_Large/SM_Large_Gate.uasset
+Content/Levels/L_Courtyard/Assets/Gate_Large_Spiked/Large_Spiked_Gate.uasset
