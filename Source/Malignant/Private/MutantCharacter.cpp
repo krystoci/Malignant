@@ -8,15 +8,15 @@
 
 AMutantCharacter::AMutantCharacter()
 {
+	//Needs to be disabled due to mixing table functions
 	AutoPossessPlayer = EAutoReceiveInput::Disabled;
 }
 
 void AMutantCharacter::BeginPlay()
-{
-
-	
+{	
 	Super::BeginPlay();
 
+	//Create new attack component
 	if (AttackComponentClass)
 	{
 		AttackComponent = NewObject<UComboAttackComponent>(this, AttackComponentClass, TEXT("AttackComponent"));
@@ -43,11 +43,6 @@ void AMutantCharacter::Interact()
 	//Uses APlayerCharacter::Interact
 	Super::Interact();
 
-}
-
-FName AMutantCharacter::GetName()
-{
-	return Label;
 }
 
 void AMutantCharacter::LightAttack()

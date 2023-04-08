@@ -27,7 +27,7 @@ APlayerCharacter::APlayerCharacter()
 
 }
 
-//Default Implementation if not overridden in Blueprints
+//Default Equip Implementation if not overridden in Blueprints
 void APlayerCharacter::EquipItem_Implementation(AItemPickupBase* NewItem)
 {
 	EquippedItem = NewItem;
@@ -42,12 +42,11 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	//Store player controller
-	APlayerController* TempCont = Cast<APlayerController>(GetController());
-	if (TempCont)
-		PController = TempCont;
+	PController = Cast<APlayerController>(GetController());
 
 }
 
+//Attack Methods
 void APlayerCharacter::LightAttack()
 {
 }
@@ -57,21 +56,17 @@ void APlayerCharacter::HeavyAttack()
 }
 
 
-
-
 // Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 	//Look trace
+	//THIS NEEDS TO BE MOVED TO THE CONTROLLER IN A TIMER FUNCTION
 	FVector Start = MainCamera->GetComponentLocation();
 	FVector End = (MainCamera->GetForwardVector() * LookDistance) + Start;
 	GetWorld()->LineTraceSingleByChannel(LookResult, Start, End, ECC_Visibility);
 	//DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 0.2f, 0, 5.0f);
-
-	//Handle lookat hit result
-	HandleTrace();
 	
 }
 
@@ -133,21 +128,6 @@ void APlayerCharacter::Jump()
 	}
 }
 
-//Functions for enabling and disabling player input
-void APlayerCharacter::Lock()
-{
-	if(PController)
-		DisableInput(PController);
-}
-
-void APlayerCharacter::Release(APlayerController* PCont)
-{
-	EnableInput(PCont);
-}
-
-/*******************************************/
-
-
 //Handle Interaction with objects 
 void APlayerCharacter::Interact()
 {
@@ -164,48 +144,9 @@ void APlayerCharacter::Interact()
 	IInteractable* IO = Cast<IInteractable>(LookResult.GetActor());
 	if (IO)
 	{
-		if (DisplayWidget)
-			DisplayWidget->RemoveFromViewport();
 		IO->Interact(this);
 		return;
 	}
 	return;
 }
 
-//If we are looking at an object that is interactable, call HandleDisplay to display the object's widget
-void APlayerCharacter::HandleTrace()
-{
-	IInteractable* IO = Cast<IInteractable>(LookResult.GetActor());
-	if (IO && InteractingObject)
-		return;
-
-	if ((InteractingObject == nullptr) && IO)
-	{
-		InteractingObject = IO;
-		HandleDisplay(true);
-		return;
-	
-	}
-	if (((IO == nullptr) && InteractingObject) || LookResult.bBlockingHit == false)
-	{
-		HandleDisplay(false);
-		InteractingObject = nullptr;
-		return;
-	}
-}
-
-//Display or remove interacting widget from screen
-void APlayerCharacter::HandleDisplay(bool Visible)
-{
-	if (Visible)
-	{
-		if (TSubclassOf<UUserWidget> Type = InteractingObject->GetWidgetType())
-		{
-			DisplayWidget = CreateWidget<UUserWidget>(PController, Type);
-			DisplayWidget->AddToViewport(0);
-		}
-		return;
-	}
-	if(DisplayWidget)
-		DisplayWidget->RemoveFromViewport();
-}
