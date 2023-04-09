@@ -28,6 +28,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnCameraLookUp OnCameraLookUp;
+
 	// Sets default values for this pawn's properties
 	APlayerCharacter();
 
@@ -44,17 +45,15 @@ public:
 	virtual void LookRight(float AxisValue);
 	virtual void Jump();
 
-	//Proxies for Enable/Disable Input
-	void Lock();
-	void Release(APlayerController* PCont);
-
 	//Used to interact with IInteractables 
 	virtual void Interact();
 
-	//Attack method
+	//Attack methods
+	UFUNCTION(BlueprintCallable)
 	virtual void LightAttack();
-	virtual void HeavyAttack();
 
+	UFUNCTION(BlueprintCallable)
+	virtual void HeavyAttack();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		void EquipItem(AItemPickupBase* NewItem);
@@ -77,10 +76,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		AItemPickupBase* EquippedItem;
 
-	//InteractingObject's assigned widget to be displayed Ex. "Press E to Interact"
-	UPROPERTY()
-		UUserWidget* DisplayWidget;
-
 	//Default distance for line trace
 	UPROPERTY(EditAnywhere, Category = Traces)
 		float LookDistance = 200;
@@ -91,11 +86,6 @@ protected:
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	//Handle LookResult and DisplayWidget
-	void HandleTrace();
-	void HandleDisplay(bool Visible);
-
 
 	/* members */
 protected:
