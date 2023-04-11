@@ -2,6 +2,8 @@
 
 
 #include "FourArmMutantCharacter.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
+#include "Camera/CameraComponent.h"
 
 //Set base stats and new components
 AFourArmMutantCharacter::AFourArmMutantCharacter()
@@ -22,7 +24,7 @@ void AFourArmMutantCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	//While holding an object, keep it's location in center camera view
-	//THIS WILL NEED TO BE CHANGED
+	//THIS WILL NEED TO BE CHANGED TO THE SOCKET
 	if (PhysicsHandle->GrabbedComponent)
 	{
 		PhysicsHandle->GrabbedComponent->SetWorldLocation(LookResult.TraceEnd);

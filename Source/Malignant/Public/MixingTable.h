@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Interactable.h"
-#include "Components/BoxComponent.h"
-#include "PlayerCharacter.h"
 #include "GameFramework/Actor.h"
 #include "MixingTable.generated.h"
 
-
+//Forward Declarations
 class UUserWidget;
+class UBoxComponent;
+class APlayerCharacter;
+class UCameraComponent;
 
 //To pass values to BottleSelect function
 DECLARE_DELEGATE_OneParam(FBottleSelect, const int32)
@@ -22,7 +23,7 @@ class MALIGNANT_API AMixingTable : public AActor, public IInteractable
 
 
 
-	/* methods */
+//Methods
 public:
 
 	// Sets default values for this actor's properties
@@ -34,17 +35,19 @@ public:
 	//Primary function called when this object is interacted with. Overridden from IInteractable
 	virtual bool Interact(AActor* CallingActor) override;
 
+	//Blueprint native event to initialize the mixing table widget and begin functionality
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void Initialize();
 
 	void Initialize_Implementation();
 
-	/* members */
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<UUserWidget> WidgetClass;
-
+//Members
 public:
+
+	//To set mixing table widget class
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		TSubclassOf<UUserWidget> WidgetClass;
 
 	UPROPERTY(EditAnywhere)
 		UBoxComponent* BoxCollision;
@@ -52,29 +55,30 @@ public:
 	UPROPERTY(EditAnywhere)
 		UCameraComponent* TableCamera;
 
-	/* methods */
+//Methods
 protected:
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 
-	/* members */
+//Members
 protected:
 
 
 	//Values for the interacting player and corresponding controller to recieve input
 	UPROPERTY()
 		APlayerCharacter* Player;
+
 	UPROPERTY()
 		APlayerController* Controller;
 
 
-	/* methods */
+//Methods
 private:
 
 
-	/* members */
+//Members
 private:
 
 
