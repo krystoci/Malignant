@@ -4,12 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "MutantCharacter.h"
-#include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "FourArmMutantCharacter.generated.h"
 
-/**
- * 
- */
+//Forward Declarations
+class UPhysicsHandleComponent;
+
+
 UCLASS()
 class MALIGNANT_API AFourArmMutantCharacter : public AMutantCharacter
 {

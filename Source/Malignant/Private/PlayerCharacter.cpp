@@ -5,6 +5,9 @@
 #include "Components/CapsuleComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "ItemPickupBase.h"
+#include "Components/StaticMeshComponent.h"
+#include "Camera/CameraComponent.h"
+#include "Interactable.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values

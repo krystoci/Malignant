@@ -4,14 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Components/StaticMeshComponent.h"
-#include "Camera/CameraComponent.h"
-#include "Interactable.h"
-#include "Engine/World.h"
 #include "Delegates/Delegate.h"
 #include "PlayerCharacter.generated.h"
 
-
+//Forward Declarations
+class UStaticMeshComponent;
+class UCameraComponent;
+class IInteractable;
 class AItemPickupBase;
 
 UDELEGATE(BlueprintAuthorityOnly)

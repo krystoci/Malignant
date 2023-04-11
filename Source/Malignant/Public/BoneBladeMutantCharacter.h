@@ -21,10 +21,10 @@ public:
 
 	ABoneBladeMutantCharacter();
 
-	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 	virtual void Interact() override;
 
 	/* members */
@@ -35,7 +35,9 @@ public:
 	/* methods */
 protected:
 
+	virtual void BeginPlay() override;
 
+	
 
 	/* members */
 protected:
