@@ -16,13 +16,25 @@
 
 class UComboAttackComponent;
 
+//MutantCharacter ID for determining in MutantMap
+UENUM(BlueprintType)
+enum class EMutantState : uint8
+{	
+	Human = 0, 
+	EMS_Base, 
+	EMS_Bone, 
+	EMS_FourArm, 
+	EMS_Brute, 
+	EMS_FireBreathing, 
+	EMS_Poison 
+};
+
 
 //This is an abstract class for all mutants to inherit from
 UCLASS()
 class MALIGNANT_API AMutantCharacter : public APlayerCharacter
 {
 	GENERATED_BODY()
-
 	/* methods */
 public:
 
@@ -33,17 +45,26 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	//Interact with objects. Overriden from PlayerCharacter
 	virtual void Interact() override;
 
-	//Attack methods
+	virtual FName GetName();
+
+	//Attack method
+	UFUNCTION(BlueprintCallable)
 		virtual void LightAttack() override;
+
+	UFUNCTION(BlueprintCallable)
 		virtual void HeavyAttack() override;
 
 
 	/* members */
 public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AnimationNotify)
+		TMap<TEnumAsByte<EPhysicalSurface>, UMetaSoundSource*> MetasoundSolver;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AnimationNotify)
+		TMap<TEnumAsByte<EPhysicalSurface>, UNiagaraSystem*> NiagaraSolver;
 
 	UPROPERTY(EditAnywhere, Category = Animation)
 		UAnimMontage* MutantAttackMontage;
@@ -61,6 +82,8 @@ protected:
 
 	/* members */
 protected:
+
+	FName Label = "MutantBase";
 
 
 	/* methods */

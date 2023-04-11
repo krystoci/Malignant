@@ -5,6 +5,7 @@
 
 AFireBreathingMutantCharacter::AFireBreathingMutantCharacter()
 {
+	Label = "Fire Breather";
 }
 
 void AFireBreathingMutantCharacter::BeginPlay()

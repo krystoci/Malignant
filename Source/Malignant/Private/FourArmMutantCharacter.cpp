@@ -6,6 +6,7 @@
 //Set base stats and new components
 AFourArmMutantCharacter::AFourArmMutantCharacter()
 {
+	Label = "FourArmMutant";
 	PhysicsHandle = CreateDefaultSubobject<UPhysicsHandleComponent>(TEXT("PhysicsHandle"));
 }
 
