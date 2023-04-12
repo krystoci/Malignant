@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "ItemPickupBase.generated.h"
 
+//Base class for any item that can be picked up and equipped by the player
 UCLASS()
 class MALIGNANT_API AItemPickupBase : public AActor, public IInteractable
 {

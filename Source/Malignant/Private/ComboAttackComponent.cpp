@@ -14,11 +14,6 @@ UComboAttackComponent::UComboAttackComponent()
 	// ...
 }
 
-void UComboAttackComponent::PlayAnimationMontage_Implementation(FName Section, float Speed)
-{
-
-}
-
 void UComboAttackComponent::LightAttack()
 {
 	if (!bIsAttacking)
@@ -101,12 +96,9 @@ void UComboAttackComponent::HeavyAttack()
 	}
 }
 
-void UComboAttackComponent::StartAttack(FName Section, float Speed)
+void UComboAttackComponent::PlayAnimationMontage_Implementation(FName Section, float Speed)
 {
 
-	bIsAttacking = true;
-	bPlayNextAttack = false;
-	PlayAnimationMontage(Section, Speed);
 }
 
 void UComboAttackComponent::ToggleComboFrame(bool IsWithinComboFrames)
@@ -131,6 +123,30 @@ void UComboAttackComponent::FinishAttack()
 	Reset();
 }
 
+void UComboAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	// ...
+}
+
+void UComboAttackComponent::StartAttack(FName Section, float Speed)
+{
+
+	bIsAttacking = true;
+	bPlayNextAttack = false;
+	PlayAnimationMontage(Section, Speed);
+}
+
+void UComboAttackComponent::SetSkeletalMesh(USkeletalMeshComponent* Component)
+{
+	CharacterMeshComponent = Component;
+}
+
+void UComboAttackComponent::SetAttackMontage(UAnimMontage* Montage)
+{
+	AttackMontage = Montage;
+}
 
 // Called when the game starts
 void UComboAttackComponent::BeginPlay()
@@ -142,7 +158,6 @@ void UComboAttackComponent::BeginPlay()
 	
 }
 
-
 bool UComboAttackComponent::bComboIsValid()
 {
 	if (bWithinComboFrames && (ComboCounter < 3) && !bPlayNextAttack)
@@ -150,14 +165,6 @@ bool UComboAttackComponent::bComboIsValid()
 		return true;
 	}
 	return false;
-}
-
-// Called every frame
-void UComboAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 uint32 UComboAttackComponent::GetSectionAsInt(FName Section)
@@ -188,13 +195,4 @@ void UComboAttackComponent::Reset()
 	AttackSpeed = StartingAttackSpeed;
 }
 
-void UComboAttackComponent::SetSkeletalMesh(USkeletalMeshComponent* Component)
-{
-	CharacterMeshComponent = Component;
-}
-
-void UComboAttackComponent::SetAttackMontage(UAnimMontage* Montage)
-{
-	AttackMontage = Montage;
-}
 

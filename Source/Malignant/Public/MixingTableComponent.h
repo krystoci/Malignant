@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "MixingTableComponent.generated.h"
 
+//Forwarde Declarations
 class UMutagenBase;
 class UCompoundBase;
 class AMutantCharacter;
@@ -20,6 +21,24 @@ class MALIGNANT_API UMixingTableComponent : public UActorComponent
 
 public:	
 
+	// Sets default values for this component's properties
+	UMixingTableComponent();
+
+	//Attempt to return a valid mutant class from ingredients selected 
+	UFUNCTION(BlueprintCallable)
+		TSubclassOf<AMutantCharacter> Mix(TSubclassOf<UMutagenBase> MutagenClass, TArray<TSubclassOf<UCompoundBase>> Ingredients, bool& isValid);
+
+	//Get all mutagens from GameInstance
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+		void GetAvailableMutagens(TArray<FMutagens>& AvailableMutagens);
+
+	//Get all compounds from GameInstance
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+		void GetAvailableCompounds(TArray<FCompounds>& AvailableCompounds);
+
+
+public:
+
 	//True if a potion has already been created
 	UPROPERTY(BlueprintReadWrite)
 		bool bPotionIsMade;
@@ -27,21 +46,11 @@ public:
 	//True if the potion has been made and not drank
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool bPotionIsAvailable;
-
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	void GetAvailableMutagens(TArray<FMutagens>& AvailableMutagens);
-
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	void GetAvailableCompounds(TArray<FCompounds>& AvailableCompounds);
-
+	
+	//Mutant class from Mix
 	UPROPERTY(BlueprintReadOnly)
-	TSubclassOf<AMutantCharacter> MutantClass;
+		TSubclassOf<AMutantCharacter> MutantClass;
 
-	// Sets default values for this component's properties
-	UMixingTableComponent();
-
-	UFUNCTION(BlueprintCallable)
-	TSubclassOf<AMutantCharacter> Mix(TSubclassOf<UMutagenBase> MutagenClass, TArray<TSubclassOf<UCompoundBase>> Ingredients, bool &isValid);
 
 protected:
 	// Called when the game starts
