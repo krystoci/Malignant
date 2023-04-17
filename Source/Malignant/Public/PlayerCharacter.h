@@ -65,7 +65,13 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* StaticMesh;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		USkeletalMeshComponent* FirstPersonBody;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		USkeletalMeshComponent* ThirdPersonBody;
+
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		UCameraComponent* MainCamera;
 
@@ -101,7 +107,7 @@ protected:
 	/* methods */
 private:
 
-
+	void SetCharacterVisiblity();
 	/* members */
 private:
 
