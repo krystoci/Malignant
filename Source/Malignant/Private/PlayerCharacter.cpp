@@ -18,13 +18,16 @@ APlayerCharacter::APlayerCharacter()
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
 	//Create and setup default components
-	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
+	//StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	MainCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
+	FirstPersonBody = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonSkeleton"));
+	ThirdPersonBody = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ThirdPersonSkeleton"));
 
-	StaticMesh->SetupAttachment(RootComponent);
-	MainCamera->SetupAttachment(RootComponent);
-	MainCamera->SetRelativeLocation({ 0.0f, 0.0f, 60.0f });
-
+	FirstPersonBody->SetupAttachment(RootComponent);
+	ThirdPersonBody->SetupAttachment(RootComponent);
+	//StaticMesh->SetupAttachment(RootComponent);
+	
+	
 	GetCharacterMovement()->SetUpdatedComponent(RootComponent);
 	bUseControllerRotationYaw = true;
 
@@ -46,7 +49,29 @@ void APlayerCharacter::BeginPlay()
 
 	//Store player controller
 	PController = Cast<APlayerController>(GetController());
+	SetCharacterVisiblity();
 
+	const USkeletalMeshSocket* CameraSocket = FirstPersonBody->GetSocketByName("cameraSocket");
+	if (CameraSocket)
+	{
+		MainCamera->SetupAttachment(FirstPersonBody, FName("cameraSocket"));
+	}
+	/*else
+	{
+		MainCamera->SetupAttachment(RootComponent);
+		MainCamera->SetRelativeLocation({ 0.0f, 0.0f, 60.0f });
+	}*/
+
+}
+
+void APlayerCharacter::SetCharacterVisiblity()
+{
+	GetMesh()->SetOnlyOwnerSee(true);
+	ThirdPersonBody->SetOwnerNoSee(true);
+	FirstPersonBody->SetOnlyOwnerSee(true);
+	FirstPersonBody->HideBoneByName("l_bicep", EPhysBodyOp::PBO_None);
+	FirstPersonBody->HideBoneByName("r_bicep", EPhysBodyOp::PBO_None);
+	FirstPersonBody->HideBoneByName("neck", EPhysBodyOp::PBO_None);
 }
 
 //Attack Methods
@@ -107,10 +132,12 @@ void APlayerCharacter::MoveRight(float AxisValue)
 void APlayerCharacter::LookUp(float AxisValue)
 {
 
-	FRotator CurrentRotation = MainCamera->GetRelativeRotation();
-	FRotator NewRotation = CurrentRotation;
-	NewRotation.Pitch = FMath::Clamp(NewRotation.Pitch + AxisValue, -89.0, 89.0);
-	MainCamera->SetRelativeRotation(NewRotation);
+	//FRotator CurrentRotation = MainCamera->GetRelativeRotation();
+	//FRotator CurrentRotation = GetMesh()->GetSocketRotation("spine3");
+	//FRotator NewRotation = CurrentRotation;
+	//NewRotation.Pitch = FMath::Clamp(NewRotation.Pitch + AxisValue, -89.0, 89.0);
+	//MainCamera->SetRelativeRotation(NewRotation);
+	//GetMesh()->GetAnimationBl
 
 	OnCameraLookUp.Broadcast(AxisValue);
 }
