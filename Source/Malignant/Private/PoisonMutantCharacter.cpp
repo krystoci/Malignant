@@ -6,6 +6,7 @@
 
 APoisonMutantCharacter::APoisonMutantCharacter()
 {
+	Label = "Poison";
 }
 
 void APoisonMutantCharacter::BeginPlay()

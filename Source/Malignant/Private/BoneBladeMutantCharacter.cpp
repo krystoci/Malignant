@@ -5,6 +5,7 @@
 
 ABoneBladeMutantCharacter::ABoneBladeMutantCharacter()
 {
+	Label = "BoneBlade";
 }
 
 void ABoneBladeMutantCharacter::BeginPlay()
