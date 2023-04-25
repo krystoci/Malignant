@@ -10,13 +10,21 @@
 class UComboAttackComponent;
 
 
+<<<<<<< HEAD
 //Class defines base functionality shared by all mutants 
+=======
+//This is an abstract class for all mutants to inherit from
+>>>>>>> parent of bcc2c88 (Added security room assets including grey locker, mug, chair, milk crates, and all the basecolor, metallic, normal and roughness maps)
 UCLASS()
 class MALIGNANT_API AMutantCharacter : public APlayerCharacter
 {
 	GENERATED_BODY()
 
+<<<<<<< HEAD
 //Methods
+=======
+	/* methods */
+>>>>>>> parent of bcc2c88 (Added security room assets including grey locker, mug, chair, milk crates, and all the basecolor, metallic, normal and roughness maps)
 public:
 
 	AMutantCharacter();
@@ -30,8 +38,13 @@ public:
 	virtual void Interact() override;
 
 	//Attack methods
+<<<<<<< HEAD
 	virtual void LightAttack() override;
 	virtual void HeavyAttack() override;
+=======
+		virtual void LightAttack() override;
+		virtual void HeavyAttack() override;
+>>>>>>> parent of bcc2c88 (Added security room assets including grey locker, mug, chair, milk crates, and all the basecolor, metallic, normal and roughness maps)
 
 
 //Members
@@ -55,7 +68,16 @@ protected:
 protected:
 
 
+<<<<<<< HEAD
 //Methods
+=======
+
+	/* members */
+protected:
+
+
+	/* methods */
+>>>>>>> parent of bcc2c88 (Added security room assets including grey locker, mug, chair, milk crates, and all the basecolor, metallic, normal and roughness maps)
 private:
 
 
