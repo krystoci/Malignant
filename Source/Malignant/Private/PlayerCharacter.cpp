@@ -49,7 +49,6 @@ void APlayerCharacter::BeginPlay()
 
 	//Store player controller
 	PController = Cast<APlayerController>(GetController());
-<<<<<<< HEAD
 	SetCharacterVisiblity();
 
 	const USkeletalMeshSocket* CameraSocket = FirstPersonBody->GetSocketByName("cameraSocket");
@@ -75,11 +74,6 @@ void APlayerCharacter::SetCharacterVisiblity()
 	FirstPersonBody->HideBoneByName("neck", EPhysBodyOp::PBO_None);
 }
 
-=======
-
-}
-
->>>>>>> parent of bcc2c88 (Added security room assets including grey locker, mug, chair, milk crates, and all the basecolor, metallic, normal and roughness maps)
 //Attack Methods
 void APlayerCharacter::LightAttack()
 {
