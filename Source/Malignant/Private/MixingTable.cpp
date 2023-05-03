@@ -3,6 +3,9 @@
 
 #include "MixingTable.h"
 #include "MutantCharacter.h"
+#include "Components/BoxComponent.h"
+#include "Camera/CameraComponent.h"
+#include "PlayerCharacter.h"
 #include "MalignantGameState.h"
 #include "Blueprint/UserWidget.h"
 
@@ -22,7 +25,6 @@ AMixingTable::AMixingTable()
 
 	TableCamera->SetupAttachment(RootComponent);
 
-
 	TableCamera->SetRelativeRotation({ -15, -90, 0 });
 	TableCamera->SetRelativeLocation({ 0, 90, 73 });
 }
@@ -41,7 +43,6 @@ void AMixingTable::Tick(float DeltaTime)
 
 }
 
-//Check valid player and action bindings. 
 bool AMixingTable::Interact(AActor* CallingActor)
 {
 	APlayerCharacter* CallingPlayer;

@@ -4,14 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Components/StaticMeshComponent.h"
-#include "Camera/CameraComponent.h"
-#include "Interactable.h"
-#include "Engine/World.h"
 #include "Delegates/Delegate.h"
 #include "PlayerCharacter.generated.h"
 
-
+//Forward Declarations
+class UStaticMeshComponent;
+class UCameraComponent;
+class IInteractable;
 class AItemPickupBase;
 
 UDELEGATE(BlueprintAuthorityOnly)
@@ -28,6 +27,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnCameraLookUp OnCameraLookUp;
+
 	// Sets default values for this pawn's properties
 	APlayerCharacter();
 
@@ -44,17 +44,15 @@ public:
 	virtual void LookRight(float AxisValue);
 	virtual void Jump();
 
-	//Proxies for Enable/Disable Input
-	void Lock();
-	void Release(APlayerController* PCont);
-
 	//Used to interact with IInteractables 
 	virtual void Interact();
 
-	//Attack method
+	//Attack methods
+	UFUNCTION(BlueprintCallable)
 	virtual void LightAttack();
-	virtual void HeavyAttack();
 
+	UFUNCTION(BlueprintCallable)
+	virtual void HeavyAttack();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		void EquipItem(AItemPickupBase* NewItem);
@@ -67,7 +65,13 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* StaticMesh;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		USkeletalMeshComponent* FirstPersonBody;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		USkeletalMeshComponent* ThirdPersonBody;
+
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		UCameraComponent* MainCamera;
 
@@ -76,10 +80,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		AItemPickupBase* EquippedItem;
-
-	//InteractingObject's assigned widget to be displayed Ex. "Press E to Interact"
-	UPROPERTY()
-		UUserWidget* DisplayWidget;
 
 	//Default distance for line trace
 	UPROPERTY(EditAnywhere, Category = Traces)
@@ -91,11 +91,6 @@ protected:
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	//Handle LookResult and DisplayWidget
-	void HandleTrace();
-	void HandleDisplay(bool Visible);
-
 
 	/* members */
 protected:
@@ -112,7 +107,7 @@ protected:
 	/* methods */
 private:
 
-
+	void SetCharacterVisiblity();
 	/* members */
 private:
 
