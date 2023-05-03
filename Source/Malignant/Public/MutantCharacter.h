@@ -44,7 +44,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = Animation)
 		TSubclassOf<UComboAttackComponent> AttackComponentClass;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		UComboAttackComponent* AttackComponent;
 
 //Methods
