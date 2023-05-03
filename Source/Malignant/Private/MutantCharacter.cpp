@@ -23,7 +23,7 @@ void AMutantCharacter::BeginPlay()
 	}
 	if (AttackComponent)
 	{
-		AttackComponent->SetSkeletalMesh(GetMesh());
+		AttackComponent->SetSkeletalMeshes(GetMesh(), ThirdPersonBody);
 		AttackComponent->SetAttackMontage(MutantAttackMontage);
 	}
 }
