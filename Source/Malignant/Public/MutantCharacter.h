@@ -10,11 +10,13 @@
 class UComboAttackComponent;
 
 
+
 //Class defines base functionality shared by all mutants 
 UCLASS()
 class MALIGNANT_API AMutantCharacter : public APlayerCharacter
 {
 	GENERATED_BODY()
+
 
 //Methods
 public:
@@ -33,7 +35,6 @@ public:
 	virtual void LightAttack() override;
 	virtual void HeavyAttack() override;
 
-
 //Members
 public:
 
@@ -43,7 +44,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = Animation)
 		TSubclassOf<UComboAttackComponent> AttackComponentClass;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		UComboAttackComponent* AttackComponent;
 
 //Methods
@@ -61,10 +62,6 @@ private:
 
 //Members
 private:
-
-
-
-	
 
 	
 };

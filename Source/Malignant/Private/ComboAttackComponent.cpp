@@ -138,9 +138,10 @@ void UComboAttackComponent::StartAttack(FName Section, float Speed)
 	PlayAnimationMontage(Section, Speed);
 }
 
-void UComboAttackComponent::SetSkeletalMesh(USkeletalMeshComponent* Component)
+void UComboAttackComponent::SetSkeletalMeshes(USkeletalMeshComponent* FPSkeleton, USkeletalMeshComponent* TPSkeleton)
 {
-	CharacterMeshComponent = Component;
+	FirstPersonSkeleton = FPSkeleton;
+	ThirdPersonSkeleton = TPSkeleton;
 }
 
 void UComboAttackComponent::SetAttackMontage(UAnimMontage* Montage)

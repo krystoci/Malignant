@@ -5,7 +5,6 @@
 
 ABruteMutantCharacter::ABruteMutantCharacter()
 {
-	Label = "Brute";
 }
 
 void ABruteMutantCharacter::BeginPlay()
