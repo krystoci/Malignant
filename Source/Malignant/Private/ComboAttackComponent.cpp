@@ -18,7 +18,7 @@ void UComboAttackComponent::LightAttack()
 {
 	if (!bIsAttacking)
 	{
-		AttackSection = "0";
+		AttackSection = "LightAttackLeft";
 		StartAttack(AttackSection, AttackSpeed);
 	}
 	if (bComboIsValid())
@@ -27,14 +27,14 @@ void UComboAttackComponent::LightAttack()
 		{
 			case 0:
 			{
-				AttackSection = "1";
+				AttackSection = "LightAttackRight";
 				bPlayNextAttack = true;
 				ComboCounter++;
 				break;
 			}
 			case 1:
 			{
-				AttackSection = "0";
+				AttackSection = "LightAttackLeft";
 				bPlayNextAttack = true;
 				ComboCounter++;
 				break;
@@ -42,7 +42,7 @@ void UComboAttackComponent::LightAttack()
 			case 3:
 			{
 				AttackSpeed = 1.0;
-				AttackSection = "1";
+				AttackSection = "LightAttackRight";
 				bPlayNextAttack = true;
 				ComboCounter++;
 				break;
@@ -55,7 +55,7 @@ void UComboAttackComponent::HeavyAttack()
 {
 	if (!bIsAttacking)
 	{
-		AttackSection = "2";
+		AttackSection = "HeavyAttack1";
 		StartAttack(AttackSection, AttackSpeed);
 	}
 	if (bComboIsValid())
@@ -64,21 +64,21 @@ void UComboAttackComponent::HeavyAttack()
 		{
 		case 0:
 		{
-			AttackSection = "3";
+			AttackSection = "HeavyAttack2";
 			bPlayNextAttack = true;
 			ComboCounter = 3;
 			break;
 		}
 		case 1:
 		{
-			AttackSection = "4";
+			AttackSection = "SharpenBladeBoth";
 			bPlayNextAttack = true;
 			ComboCounter++;
 			break;
 		}
 		case 2:
 		{
-			AttackSection = "3";
+			AttackSection = "HeavyAttack2";
 			AttackSpeed -= 0.25;
 			bPlayNextAttack = true;
 			ComboCounter++;
@@ -86,7 +86,7 @@ void UComboAttackComponent::HeavyAttack()
 		}
 		case 3:
 		{
-			AttackSection = "2";
+			AttackSection = "HeavyAttack1";
 			AttackSpeed -= 0.25;
 			bPlayNextAttack = true;
 			ComboCounter++;
@@ -172,15 +172,15 @@ uint32 UComboAttackComponent::GetSectionAsInt(FName Section)
 {
 	uint32 SectionNumber = 0;
 
-	if (Section == "0")
+	if (Section == "LightAttackLeft")
 		SectionNumber = 0;
-	if (Section == "1")
+	if (Section == "LightAttackRight")
 		SectionNumber = 1;
-	if (Section == "2")
+	if (Section == "HeavyAttack1")
 		SectionNumber = 2;
-	if (Section == "3")
+	if (Section == "HeavyAttack2")
 		SectionNumber = 3;
-	if (Section == "4")
+	if (Section == "SharpenBladeBoth")
 		SectionNumber = 4;
 
 	//Add more as needed
