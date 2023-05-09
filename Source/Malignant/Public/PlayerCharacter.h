@@ -16,6 +16,47 @@ class AItemPickupBase;
 UDELEGATE(BlueprintAuthorityOnly)
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCameraLookUp, float, AxisValue);
 
+USTRUCT(BlueprintType, Blueprintable)
+struct FCharacterStats
+{
+	GENERATED_BODY()
+
+	FCharacterStats()
+	{
+		CurrentHealth = BaseHealth;
+		CurrentDefense = BaseDefense;
+		CurrentAttack = BaseAttack;
+		CurrentStamina = BaseStamina;
+		CurrentSprintSpeed = BaseSprintSpeed;
+	}
+
+	//Default Stat Values
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float BaseHealth = 100.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float BaseDefense = 10.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float BaseAttack = 20.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float BaseStamina = 100.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float BaseSprintSpeed = 100.0f;
+	
+	//Stat values at any given time to be used at runtime
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float CurrentHealth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float CurrentDefense;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float CurrentAttack;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float CurrentStamina;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float CurrentSprintSpeed;
+
+};
+
+
 UCLASS()
 class MALIGNANT_API APlayerCharacter : public ACharacter
 {
@@ -74,6 +115,13 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		UCameraComponent* MainCamera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FCharacterStats CharacterStats;
+
+	//May change the name of this later cause I had to move it to PlayerCharacter
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Animation)
+		UAnimMontage* MutantAttackMontage;
 
 	//Object currently being interacted with or viewed and interactable
 	IInteractable* InteractingObject;

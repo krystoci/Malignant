@@ -49,6 +49,16 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	FName AttackSection;
 
+	UPROPERTY(BlueprintReadWrite)
+		bool bIsAttacking = false;
+
+	UPROPERTY(BlueprintReadWrite)
+		bool bCanAttack = true;
+
+	UPROPERTY(EditAnywhere)
+		float ComboDelay = 0.2f;
+
+
 
 //Methods
 protected:
@@ -77,7 +87,6 @@ protected:
 		float StartingAttackSpeed = 1;
 
 	float AttackSpeed = 1;
-	bool bIsAttacking = false;
 	bool bWithinComboFrames = false;
 	bool bPlayNextAttack = false;
 	int32 ComboCounter = 1;

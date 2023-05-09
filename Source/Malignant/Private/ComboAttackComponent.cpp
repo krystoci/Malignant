@@ -20,6 +20,7 @@ void UComboAttackComponent::LightAttack()
 	{
 		AttackSection = "LightAttackLeft";
 		StartAttack(AttackSection, AttackSpeed);
+		return;
 	}
 	if (bComboIsValid())
 	{
@@ -28,14 +29,14 @@ void UComboAttackComponent::LightAttack()
 			case 0:
 			{
 				AttackSection = "LightAttackRight";
-				bPlayNextAttack = true;
+				//bPlayNextAttack = true;
 				ComboCounter++;
 				break;
 			}
 			case 1:
 			{
 				AttackSection = "LightAttackLeft";
-				bPlayNextAttack = true;
+				//bPlayNextAttack = true;
 				ComboCounter++;
 				break;
 			}
@@ -43,12 +44,16 @@ void UComboAttackComponent::LightAttack()
 			{
 				AttackSpeed = 1.0;
 				AttackSection = "LightAttackRight";
-				bPlayNextAttack = true;
+				//bPlayNextAttack = true;
 				ComboCounter++;
 				break;
 			}
+			default:
+				return;
 		}
+		StartAttack(AttackSection, AttackSpeed);
 	}
+	
 }
 
 void UComboAttackComponent::HeavyAttack()
@@ -57,43 +62,46 @@ void UComboAttackComponent::HeavyAttack()
 	{
 		AttackSection = "HeavyAttack1";
 		StartAttack(AttackSection, AttackSpeed);
+		return;
 	}
 	if (bComboIsValid())
 	{
 		switch (GetSectionAsInt(AttackSection))
 		{
-		case 0:
-		{
-			AttackSection = "HeavyAttack2";
-			bPlayNextAttack = true;
-			ComboCounter = 3;
-			break;
+			case 0:
+			{
+				AttackSection = "HeavyAttack2";
+				//bPlayNextAttack = true;
+				ComboCounter = 3;
+				break;
+			}
+			case 1:
+			{
+				AttackSection = "SpecialAttack";
+				//bPlayNextAttack = true;
+				ComboCounter++;
+				break;
+			}
+			case 2:
+			{
+				AttackSection = "HeavyAttack2";
+				AttackSpeed -= 0.25;
+				//bPlayNextAttack = true;
+				ComboCounter++;
+				break;
+			}
+			case 3:
+			{
+				AttackSection = "HeavyAttack1";
+				AttackSpeed -= 0.25;
+				//bPlayNextAttack = true;
+				ComboCounter++;
+				break;
+			}
 		}
-		case 1:
-		{
-			AttackSection = "SharpenBladeBoth";
-			bPlayNextAttack = true;
-			ComboCounter++;
-			break;
-		}
-		case 2:
-		{
-			AttackSection = "HeavyAttack2";
-			AttackSpeed -= 0.25;
-			bPlayNextAttack = true;
-			ComboCounter++;
-			break;
-		}
-		case 3:
-		{
-			AttackSection = "HeavyAttack1";
-			AttackSpeed -= 0.25;
-			bPlayNextAttack = true;
-			ComboCounter++;
-			break;
-		}
-		}
+		StartAttack(AttackSection, AttackSpeed);
 	}
+	
 }
 
 void UComboAttackComponent::PlayAnimationMontage_Implementation(FName Section, float Speed)
@@ -106,6 +114,7 @@ void UComboAttackComponent::ToggleComboFrame(bool IsWithinComboFrames)
 	bWithinComboFrames = IsWithinComboFrames;
 }
 
+//May need to look at when this is called and change it due to fixing the combo frames
 void UComboAttackComponent::FinishAttack()
 {
 	ToggleComboFrame(false);
@@ -116,8 +125,8 @@ void UComboAttackComponent::FinishAttack()
 	}
 	if (ComboCounter > 2)
 	{
-		FTimerHandle ComboDelay;
-		GetOwner()->GetWorldTimerManager().SetTimer(ComboDelay, this, &UComboAttackComponent::Reset, 0.6, false);
+		FTimerHandle ComboDelayHandle;
+		GetOwner()->GetWorldTimerManager().SetTimer(ComboDelayHandle, this, &UComboAttackComponent::Reset, ComboDelay, false); 
 		return;
 	}
 	Reset();
@@ -132,10 +141,13 @@ void UComboAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 
 void UComboAttackComponent::StartAttack(FName Section, float Speed)
 {
-
-	bIsAttacking = true;
-	bPlayNextAttack = false;
-	PlayAnimationMontage(Section, Speed);
+	if (bCanAttack)
+	{
+		bIsAttacking = true;
+		bPlayNextAttack = false;
+		PlayAnimationMontage(Section, Speed);
+	}
+	
 }
 
 void UComboAttackComponent::SetSkeletalMeshes(USkeletalMeshComponent* FPSkeleton, USkeletalMeshComponent* TPSkeleton)
@@ -161,7 +173,7 @@ void UComboAttackComponent::BeginPlay()
 
 bool UComboAttackComponent::bComboIsValid()
 {
-	if (bWithinComboFrames && (ComboCounter < 3) && !bPlayNextAttack)
+	if (bWithinComboFrames && (ComboCounter < 3)) //&& bPlayNextAttack
 	{
 		return true;
 	}
@@ -180,7 +192,7 @@ uint32 UComboAttackComponent::GetSectionAsInt(FName Section)
 		SectionNumber = 2;
 	if (Section == "HeavyAttack2")
 		SectionNumber = 3;
-	if (Section == "SharpenBladeBoth")
+	if (Section == "SpecialAttack")
 		SectionNumber = 4;
 
 	//Add more as needed

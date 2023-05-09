@@ -39,9 +39,6 @@ public:
 public:
 
 	UPROPERTY(EditAnywhere, Category = Animation)
-		UAnimMontage* MutantAttackMontage;
-
-	UPROPERTY(EditAnywhere, Category = Animation)
 		TSubclassOf<UComboAttackComponent> AttackComponentClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
