@@ -3,7 +3,7 @@
 
 
 #include "MutantCharacter.h"
-
+#include "DashComponent.h"
 #include "ComboAttackComponent.h"
 
 AMutantCharacter::AMutantCharacter()
@@ -55,4 +55,15 @@ void AMutantCharacter::HeavyAttack()
 {
 	if(AttackComponent)
 		AttackComponent->HeavyAttack();
+}
+
+void AMutantCharacter::OnDash()
+{
+	if (DashComponent)
+	{
+		if (AttackComponent)
+		{
+			DashComponent->Dash(AttackComponent);
+		}
+	}
 }

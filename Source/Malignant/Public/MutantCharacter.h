@@ -34,6 +34,7 @@ public:
 	//Attack methods
 	virtual void LightAttack() override;
 	virtual void HeavyAttack() override;
+	virtual void OnDash() override;
 
 //Members
 public:

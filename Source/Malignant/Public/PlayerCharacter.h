@@ -12,9 +12,13 @@ class UStaticMeshComponent;
 class UCameraComponent;
 class IInteractable;
 class AItemPickupBase;
+class UDashComponent;
+class USprintComponent;
 
 UDELEGATE(BlueprintAuthorityOnly)
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCameraLookUp, float, AxisValue);
+
+DECLARE_DELEGATE_OneParam(FOnSprintPressed, bool);
 
 USTRUCT(BlueprintType, Blueprintable)
 struct FCharacterStats
@@ -37,6 +41,8 @@ struct FCharacterStats
 		float BaseDefense = 10.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float BaseAttack = 20.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float BaseWalkSpeed = 600.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float BaseStamina = 100.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -69,6 +75,7 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnCameraLookUp OnCameraLookUp;
 
+
 	// Sets default values for this pawn's properties
 	APlayerCharacter();
 
@@ -84,6 +91,11 @@ public:
 	virtual void LookUp(float AxisValue);
 	virtual void LookRight(float AxisValue);
 	virtual void Jump();
+	virtual void OnDash();
+	
+	UFUNCTION()
+	virtual void OnSprint(bool bisStarting);
+	
 
 	//Used to interact with IInteractables 
 	virtual void Interact();
@@ -115,6 +127,12 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		UCameraComponent* MainCamera;
+
+	UPROPERTY(EditAnywhere, Category = Dash)
+		UDashComponent* DashComponent;
+
+	UPROPERTY(EditAnywhere, Category = SprintDash)
+		USprintComponent* SprintComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FCharacterStats CharacterStats;
