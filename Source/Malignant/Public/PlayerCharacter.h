@@ -14,11 +14,14 @@ class IInteractable;
 class AItemPickupBase;
 class UDashComponent;
 class USprintComponent;
+class UStaminaManager;
 
 UDELEGATE(BlueprintAuthorityOnly)
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCameraLookUp, float, AxisValue);
 
 DECLARE_DELEGATE_OneParam(FOnSprintPressed, bool);
+DECLARE_DELEGATE(FOnStaminaTaken);
+DECLARE_DELEGATE(FStaminaStartRefill);
 
 USTRUCT(BlueprintType, Blueprintable)
 struct FCharacterStats
@@ -74,6 +77,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnCameraLookUp OnCameraLookUp;
+
+	FOnStaminaTaken StaminaTaken;
+	FStaminaStartRefill StaminaStartRefill;
 
 
 	// Sets default values for this pawn's properties
@@ -177,7 +183,8 @@ private:
 	/* members */
 private:
 
-
+	UPROPERTY()
+	UStaminaManager* PlayerStaminaManager;
 
 
 };

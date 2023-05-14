@@ -26,6 +26,9 @@ protected:
 	UFUNCTION()
 	void ResetDash(UAnimMontage* PlayedMontage, bool Interrupted);
 
+	UFUNCTION()
+		void ResetAttack(UAnimMontage* PlayedMontage, bool Interrupted);
+
 //Members
 protected:
 
@@ -35,6 +38,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Dash)
 		float DashStrength = 5000.0;
 
+	UPROPERTY()
 	UComboAttackComponent* AttackComponent;
 	
 
@@ -49,5 +53,6 @@ public:
 private:
 
 	FTimerHandle DashResetHandle;
+	bool bCanDash = true;
 		
 };

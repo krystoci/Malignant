@@ -26,9 +26,6 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
-	void IncreaseStamina();
-
-	UFUNCTION()
 	void DecreaseStamina();
 
 public:	
@@ -42,7 +39,5 @@ private:
 
 	bool bisRefilling = false;
 	FTimerHandle DecreaseHandle;
-	FTimerHandle IncreaseHandle;
-
 		
 };

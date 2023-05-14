@@ -59,7 +59,7 @@ void AMutantCharacter::HeavyAttack()
 
 void AMutantCharacter::OnDash()
 {
-	if (DashComponent)
+	if (DashComponent && CharacterStats.CurrentStamina >= 10.0)
 	{
 		if (AttackComponent)
 		{

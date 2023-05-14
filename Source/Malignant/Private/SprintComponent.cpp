@@ -25,20 +25,15 @@ void USprintComponent::Sprint(bool bSprintStarting)
 {
 	if (bSprintStarting)
 	{
-		bisRefilling = false;
-		Player->GetWorldTimerManager().ClearTimer(IncreaseHandle);
+		Player->StaminaTaken.ExecuteIfBound();
 		Player->GetCharacterMovement()->MaxWalkSpeed = Player->CharacterStats.CurrentSprintSpeed;
-		Player->GetWorldTimerManager().SetTimer(DecreaseHandle, this, &USprintComponent::DecreaseStamina, 0.1f, true);
+		Player->GetWorldTimerManager().SetTimer(DecreaseHandle, this, &USprintComponent::DecreaseStamina, 0.05f, true);
 	}
 	else
 	{
 		Player->GetWorldTimerManager().ClearTimer(DecreaseHandle);
-		if (!bisRefilling)
-		{
-			Player->GetCharacterMovement()->MaxWalkSpeed = Player->CharacterStats.BaseWalkSpeed;
-			Player->GetWorldTimerManager().SetTimer(IncreaseHandle, this, &USprintComponent::IncreaseStamina, 0.05f, true, 2.0);
-			bisRefilling = true;
-		}
+		Player->GetCharacterMovement()->MaxWalkSpeed = Player->CharacterStats.BaseWalkSpeed;
+		Player->StaminaStartRefill.ExecuteIfBound();
 	}
 }
 
@@ -52,20 +47,9 @@ void USprintComponent::BeginPlay()
 	
 }
 
-void USprintComponent::IncreaseStamina()
-{
-	Player->CharacterStats.CurrentStamina += 2;
-	if (Player->CharacterStats.CurrentStamina >= Player->CharacterStats.BaseStamina)
-	{
-		Player->CharacterStats.CurrentStamina = Player->CharacterStats.BaseStamina;
-		Player->GetWorldTimerManager().ClearTimer(IncreaseHandle);
-		bisRefilling = false;
-	}
-}
-
 void USprintComponent::DecreaseStamina()
 {
-	Player->CharacterStats.CurrentStamina -= 2;
+	Player->CharacterStats.CurrentStamina -= 1;
 	if (Player->CharacterStats.CurrentStamina <= 0.0f)
 	{
 		Sprint(false);

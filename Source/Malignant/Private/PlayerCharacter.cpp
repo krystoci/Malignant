@@ -10,6 +10,7 @@
 #include "Interactable.h"
 #include "DashComponent.h"
 #include "SprintComponent.h"
+#include "StaminaManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
@@ -35,7 +36,9 @@ APlayerCharacter::APlayerCharacter()
 	bUseControllerRotationYaw = true;
 
 	CharacterStats.BaseWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
+	
 
+	
 }
 
 //Default Equip Implementation if not overridden in Blueprints
@@ -69,6 +72,11 @@ void APlayerCharacter::BeginPlay()
 
 	DashComponent->Initialize(this);
 	SprintComponent->Initialize(this);
+
+	PlayerStaminaManager = NewObject<UStaminaManager>(UStaminaManager::StaticClass());
+	PlayerStaminaManager->Initialize(this, &CharacterStats.CurrentStamina, CharacterStats.BaseStamina);
+	StaminaTaken.BindUFunction(PlayerStaminaManager, FName("ClearRefill"));
+	StaminaStartRefill.BindUFunction(PlayerStaminaManager, FName("StartRefill"));
 
 }
 
@@ -177,6 +185,7 @@ void APlayerCharacter::OnDash()
 
 void APlayerCharacter::OnSprint(bool bisStarting)
 {
+	PlayerStaminaManager->bIsDraining = bisStarting;
 	SprintComponent->Sprint(bisStarting);
 }
 

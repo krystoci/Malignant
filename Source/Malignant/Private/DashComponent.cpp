@@ -31,11 +31,16 @@ void UDashComponent::BeginPlay()
 
 void UDashComponent::ResetDash(UAnimMontage* PlayedMontage, bool Interrupted)
 {
-	AttackComponent->bCanAttack = true;
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("BLENDING OUT")));
 	Player->GetMesh()->GetAnimInstance()->OnMontageEnded.Clear();
 	Player->GetMovementComponent()->SetJumpAllowed(true);
-	//Player->GetWorldTimerManager().ClearTimer(DashResetHandle);
+	bCanDash = true;
+	Player->StaminaStartRefill.ExecuteIfBound();
+}
+
+void UDashComponent::ResetAttack(UAnimMontage* PlayedMontage, bool Interrupted)
+{
+	AttackComponent->bCanAttack = true;
+	Player->GetMesh()->GetAnimInstance()->OnMontageBlendingOut.Clear();
 }
 
 // Called every frame
@@ -73,7 +78,7 @@ FName UDashComponent::GetDashDirection()
 
 void UDashComponent::Dash(UComboAttackComponent* AtkComponent)
 {
-	if (Player->GetCharacterMovement()->MovementMode == EMovementMode::MOVE_Walking)
+	if ((Player->GetCharacterMovement()->MovementMode == EMovementMode::MOVE_Walking) && bCanDash)
 	{
 		AttackComponent = AtkComponent;
 		if (Player->GetCharacterMovement()->Velocity != FVector{ 0.0, 0.0, 0.0 })
@@ -81,11 +86,16 @@ void UDashComponent::Dash(UComboAttackComponent* AtkComponent)
 			AttackComponent->bCanAttack = false;
 			AttackComponent->bIsAttacking = false;
 			Player->GetMovementComponent()->SetJumpAllowed(false);
+			bCanDash = false;
 
 			//Play montage and bind delegates 
 			Player->PlayAnimMontage(Player->MutantAttackMontage, 1.0f, GetDashDirection());
 			Player->GetMesh()->GetAnimInstance()->OnMontageEnded.AddDynamic(this, &UDashComponent::ResetDash);
+			Player->GetMesh()->GetAnimInstance()->OnMontageBlendingOut.AddDynamic(this, &UDashComponent::ResetAttack);
 			//
+
+			Player->CharacterStats.CurrentStamina -= 20;
+			Player->StaminaTaken.ExecuteIfBound();
 
 			FVector Impulse = Player->GetCharacterMovement()->Velocity;
 			Impulse.Normalize();
