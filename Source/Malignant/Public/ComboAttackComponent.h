@@ -38,9 +38,26 @@ public:
 
 	void StartAttack(FName Section, float Speed);
 
-	void SetSkeletalMesh(USkeletalMeshComponent* Component);
+	void SetSkeletalMeshes(USkeletalMeshComponent* FPSkeleton, USkeletalMeshComponent* TPSkeleton);
 
 	void SetAttackMontage(UAnimMontage* Montage);
+
+//Members
+
+public:
+
+	UPROPERTY(BlueprintReadOnly)
+	FName AttackSection;
+
+	UPROPERTY(BlueprintReadWrite)
+		bool bIsAttacking = false;
+
+	UPROPERTY(BlueprintReadWrite)
+		bool bCanAttack = true;
+
+	UPROPERTY(EditAnywhere)
+		float ComboDelay = 0.2f;
+
 
 
 //Methods
@@ -58,7 +75,10 @@ protected:
 protected:
 
 	UPROPERTY(BlueprintReadOnly)
-		USkeletalMeshComponent* CharacterMeshComponent;
+		USkeletalMeshComponent* FirstPersonSkeleton;
+
+	UPROPERTY(BlueprintReadOnly)
+		USkeletalMeshComponent* ThirdPersonSkeleton;
 
 	UPROPERTY(BlueprintReadOnly)
 		UAnimMontage* AttackMontage;
@@ -66,9 +86,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 		float StartingAttackSpeed = 1;
 
-	FName AttackSection;
 	float AttackSpeed = 1;
-	bool bIsAttacking = false;
 	bool bWithinComboFrames = false;
 	bool bPlayNextAttack = false;
 	int32 ComboCounter = 1;

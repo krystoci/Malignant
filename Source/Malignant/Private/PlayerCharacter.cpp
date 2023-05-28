@@ -8,6 +8,9 @@
 #include "Components/StaticMeshComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Interactable.h"
+#include "DashComponent.h"
+#include "SprintComponent.h"
+#include "StaminaManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
@@ -22,15 +25,20 @@ APlayerCharacter::APlayerCharacter()
 	MainCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	FirstPersonBody = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonSkeleton"));
 	ThirdPersonBody = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ThirdPersonSkeleton"));
+	DashComponent = CreateDefaultSubobject<UDashComponent>(TEXT("DashComponent"));
+	SprintComponent = CreateDefaultSubobject<USprintComponent>(TEXT("SprintComponent"));
 
 	FirstPersonBody->SetupAttachment(RootComponent);
 	ThirdPersonBody->SetupAttachment(RootComponent);
 	//StaticMesh->SetupAttachment(RootComponent);
 	
-	
 	GetCharacterMovement()->SetUpdatedComponent(RootComponent);
 	bUseControllerRotationYaw = true;
 
+	CharacterStats.BaseWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
+	
+
+	
 }
 
 //Default Equip Implementation if not overridden in Blueprints
@@ -61,6 +69,14 @@ void APlayerCharacter::BeginPlay()
 		MainCamera->SetupAttachment(RootComponent);
 		MainCamera->SetRelativeLocation({ 0.0f, 0.0f, 60.0f });
 	}*/
+
+	DashComponent->Initialize(this);
+	SprintComponent->Initialize(this);
+
+	PlayerStaminaManager = NewObject<UStaminaManager>(UStaminaManager::StaticClass());
+	PlayerStaminaManager->Initialize(this, &CharacterStats.CurrentStamina, CharacterStats.BaseStamina);
+	StaminaTaken.BindUFunction(PlayerStaminaManager, FName("ClearRefill"));
+	StaminaStartRefill.BindUFunction(PlayerStaminaManager, FName("StartRefill"));
 
 }
 
@@ -111,6 +127,10 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	InputComponent->BindAction("Interact", IE_Pressed, this, &APlayerCharacter::Interact);
 	InputComponent->BindAction("LightAttack", IE_Pressed, this, &APlayerCharacter::LightAttack);
 	InputComponent->BindAction("HeavyAttack", IE_Pressed, this, &APlayerCharacter::HeavyAttack);
+	InputComponent->BindAction("Dash", IE_Pressed, this, &APlayerCharacter::OnDash);
+	InputComponent->BindAction<FOnSprintPressed>("Sprint", IE_Pressed, this, &APlayerCharacter::OnSprint, true);
+	InputComponent->BindAction<FOnSprintPressed>("Sprint", IE_Released, this, &APlayerCharacter::OnSprint, false);
+
 
 }
 
@@ -156,6 +176,17 @@ void APlayerCharacter::Jump()
 	{
 		ACharacter::Jump();
 	}
+}
+
+void APlayerCharacter::OnDash()
+{
+	//Overridden in MutantCharacter to pass the Attack Component
+}
+
+void APlayerCharacter::OnSprint(bool bisStarting)
+{
+	PlayerStaminaManager->bIsDraining = bisStarting;
+	SprintComponent->Sprint(bisStarting);
 }
 
 //Handle Interaction with objects 

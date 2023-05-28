@@ -2,7 +2,3 @@
 
 
 #include "MalignantGameState.h"
-
-void AMalignantGameState::SpawnPlayer_Implementation(EMutantState CharacterClass)
-{
-}

@@ -3,27 +3,27 @@
 
 
 #include "MutantCharacter.h"
-
+#include "DashComponent.h"
 #include "ComboAttackComponent.h"
 
 AMutantCharacter::AMutantCharacter()
 {
+	//Needs to be disabled due to mixing table functions
 	AutoPossessPlayer = EAutoReceiveInput::Disabled;
 }
 
 void AMutantCharacter::BeginPlay()
-{
-
-	
+{	
 	Super::BeginPlay();
 
+	//Create new attack component
 	if (AttackComponentClass)
 	{
 		AttackComponent = NewObject<UComboAttackComponent>(this, AttackComponentClass, TEXT("AttackComponent"));
 	}
 	if (AttackComponent)
 	{
-		AttackComponent->SetSkeletalMesh(GetMesh());
+		AttackComponent->SetSkeletalMeshes(GetMesh(), ThirdPersonBody);
 		AttackComponent->SetAttackMontage(MutantAttackMontage);
 	}
 }
@@ -45,11 +45,6 @@ void AMutantCharacter::Interact()
 
 }
 
-FName AMutantCharacter::GetName()
-{
-	return Label;
-}
-
 void AMutantCharacter::LightAttack()
 {
 	if(AttackComponent)
@@ -60,4 +55,15 @@ void AMutantCharacter::HeavyAttack()
 {
 	if(AttackComponent)
 		AttackComponent->HeavyAttack();
+}
+
+void AMutantCharacter::OnDash()
+{
+	if (DashComponent && CharacterStats.CurrentStamina >= 10.0)
+	{
+		if (AttackComponent)
+		{
+			DashComponent->Dash(AttackComponent);
+		}
+	}
 }

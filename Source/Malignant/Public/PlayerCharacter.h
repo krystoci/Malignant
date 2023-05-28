@@ -12,9 +12,59 @@ class UStaticMeshComponent;
 class UCameraComponent;
 class IInteractable;
 class AItemPickupBase;
+class UDashComponent;
+class USprintComponent;
+class UStaminaManager;
 
 UDELEGATE(BlueprintAuthorityOnly)
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCameraLookUp, float, AxisValue);
+
+DECLARE_DELEGATE_OneParam(FOnSprintPressed, bool);
+DECLARE_DELEGATE(FOnStaminaTaken);
+DECLARE_DELEGATE(FStaminaStartRefill);
+
+USTRUCT(BlueprintType, Blueprintable)
+struct FCharacterStats
+{
+	GENERATED_BODY()
+
+	FCharacterStats()
+	{
+		CurrentHealth = BaseHealth;
+		CurrentDefense = BaseDefense;
+		CurrentAttack = BaseAttack;
+		CurrentStamina = BaseStamina;
+		CurrentSprintSpeed = BaseSprintSpeed;
+	}
+
+	//Default Stat Values
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float BaseHealth = 100.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float BaseDefense = 10.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float BaseAttack = 20.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float BaseWalkSpeed = 600.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float BaseStamina = 100.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float BaseSprintSpeed = 100.0f;
+	
+	//Stat values at any given time to be used at runtime
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float CurrentHealth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float CurrentDefense;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float CurrentAttack;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float CurrentStamina;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float CurrentSprintSpeed;
+
+};
+
 
 UCLASS()
 class MALIGNANT_API APlayerCharacter : public ACharacter
@@ -27,6 +77,11 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnCameraLookUp OnCameraLookUp;
+
+	FOnStaminaTaken StaminaTaken;
+	FStaminaStartRefill StaminaStartRefill;
+
+
 	// Sets default values for this pawn's properties
 	APlayerCharacter();
 
@@ -42,18 +97,21 @@ public:
 	virtual void LookUp(float AxisValue);
 	virtual void LookRight(float AxisValue);
 	virtual void Jump();
-
-	//Proxies for Enable/Disable Input
-	void Lock();
-	void Release(APlayerController* PCont);
+	virtual void OnDash();
+	
+	UFUNCTION()
+	virtual void OnSprint(bool bisStarting);
+	
 
 	//Used to interact with IInteractables 
 	virtual void Interact();
 
-	//Attack method
+	//Attack methods
+	UFUNCTION(BlueprintCallable)
 	virtual void LightAttack();
-	virtual void HeavyAttack();
 
+	UFUNCTION(BlueprintCallable)
+	virtual void HeavyAttack();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		void EquipItem(AItemPickupBase* NewItem);
@@ -76,15 +134,24 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		UCameraComponent* MainCamera;
 
+	UPROPERTY(EditAnywhere, Category = Dash)
+		UDashComponent* DashComponent;
+
+	UPROPERTY(EditAnywhere, Category = SprintDash)
+		USprintComponent* SprintComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FCharacterStats CharacterStats;
+
+	//May change the name of this later cause I had to move it to PlayerCharacter
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Animation)
+		UAnimMontage* MutantAttackMontage;
+
 	//Object currently being interacted with or viewed and interactable
 	IInteractable* InteractingObject;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		AItemPickupBase* EquippedItem;
-
-	//InteractingObject's assigned widget to be displayed Ex. "Press E to Interact"
-	UPROPERTY()
-		UUserWidget* DisplayWidget;
 
 	//Default distance for line trace
 	UPROPERTY(EditAnywhere, Category = Traces)
@@ -96,11 +163,6 @@ protected:
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	//Handle LookResult and DisplayWidget
-	void HandleTrace();
-	void HandleDisplay(bool Visible);
-
 
 	/* members */
 protected:
@@ -121,7 +183,8 @@ private:
 	/* members */
 private:
 
-
+	UPROPERTY()
+	UStaminaManager* PlayerStaminaManager;
 
 
 };
